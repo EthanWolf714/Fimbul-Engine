@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <vector>
 #include <cstring>
+#include <algorithm>
 
 #define mapWidth 24
 #define mapHeight 24
@@ -11,6 +12,7 @@
 #define texHeight 64
 #define screenWidth 800
 #define screenHeight 450
+#define numSprites 19
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -43,6 +45,41 @@ int worldMap[mapWidth][mapHeight] =
   {2,2,2,2,1,2,2,2,2,2,2,1,2,2,2,5,5,5,5,5,5,5,5,5}
 };
 
+struct Sprite
+{
+    double x;
+    double y;
+    int texture;
+};
+
+Sprite sprite[numSprites] = 
+{
+    {20.5, 11.5, 10}, //green light in front of playerstart
+  //green lights in every room
+  {18.5,4.5, 10},
+  {10.0,4.5, 10},
+  {10.0,12.5,10},
+  {3.5, 6.5, 10},
+  {3.5, 20.5,10},
+  {3.5, 14.5,10},
+  {14.5,20.5,10},
+
+  //row of pillars in front of wall: fisheye test
+  {18.5, 10.5, 9},
+  {18.5, 11.5, 9},
+  {18.5, 12.5, 9},
+
+  //some barrels around the map
+  {21.5, 1.5, 8},
+  {15.5, 1.5, 8},
+  {16.0, 1.8, 8},
+  {16.2, 1.2, 8},
+  {3.5,  2.5, 8},
+  {9.5, 15.5, 8},
+  {10.0, 15.1,8},
+  {10.5, 15.8,8},
+
+};
 
 double posX = 22, posY = 12;
 double dirX = -1, dirY = 0;
@@ -51,6 +88,14 @@ double planeX = 0, planeY = 0.66;
 double moveSpeed;//the constant value is in squares/second
 double rotSpeed; //the constant value is in radians/second
 
+//1D buffer
+double Zbuffer[screenWidth];
+//arrays used to sort sprites
+int spriteOrder[numSprites];
+double spriteDistance[numSprites];
+
+//function used to sort the sprites
+void sortSprites(int* order, double* dist, int amount);
 
 int main()
 {
@@ -85,7 +130,7 @@ int main()
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 
     //generate textures
-    Image  texImages[8];
+    Image  texImages[11];
     texImages[0] = LoadImage("src/assets/pics/eagle.png");
     texImages[1] = LoadImage("src/assets/pics/redbrick.png");
     texImages[2] = LoadImage("src/assets/pics/purplestone.png");
@@ -94,10 +139,13 @@ int main()
     texImages[5] = LoadImage("src/assets/pics/mossy.png");
     texImages[6] = LoadImage("src/assets/pics/wood.png");
     texImages[7] = LoadImage("src/assets/pics/colorstone.png");
+    texImages[8] = LoadImage("src/assets/pics/barrel.png");
+    texImages[9] = LoadImage("src/assets/pics/pillar.png");
+    texImages[10] = LoadImage("src/assets/pics/greenlight.png");
 
     //load the pixel data from each image into your texture array
-    Color* texColors[8];
-    for(int i = 0; i < 8; i++) {
+    Color* texColors[11];
+    for(int i = 0; i < 11; i++) {
         texColors[i] = LoadImageColors(texImages[i]);
         UnloadImage(texImages[i]);
     }   
@@ -152,8 +200,8 @@ int main()
        
         BeginDrawing();
             ClearBackground(BLACK); 
-
-            //Floot casting
+    
+            //Floor casting
             for(int y = 0; y < screenHeight; y++){
                 //rayDir for leftmost ray (x = 0) and rightmost ray (x = w)
                 float rayDirX0 = dirX - planeX;
@@ -206,7 +254,7 @@ int main()
 
             }
 
-
+          
 
             //Wall casting
             for(int x = 0; x < screenWidth; x++){
@@ -319,11 +367,84 @@ int main()
                     pixels[y * screenWidth + x] = texColor;
                 }
 
+                //set Zbuffer for sprite casting
+                Zbuffer[x] = perpWallDist;
+
 
 
                 
             }
 
+           
+            //SPRITE CASTING
+            //sort sprites from far to close
+            for(int i = 0; i < numSprites; i++){
+                spriteOrder[i] = i;
+                spriteDistance[i] = ((posX - sprite[i].x) * (posX - sprite[i].x) + (posY - sprite[i].y) * (posY - sprite[i].y)); //sqrt not taken
+
+
+            }
+            TraceLog(LOG_INFO, "sorting sprites");
+            sortSprites(spriteOrder, spriteDistance, numSprites);
+            
+            //after sorting, do the projection and draw
+            for(int i = 0; i < numSprites; i++){
+                //translate sprite
+                double spriteX = sprite[spriteOrder[i]].x - posX;
+                double spriteY = sprite[spriteOrder[i]].y - posY;
+
+                //transform sprite with inverse camera matrix
+                 // [ planeX   dirX ] -1                                       [ dirY      -dirX ]
+                // [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
+                // [ planeY   dirY ]                                          [ -planeY  planeX ]
+
+                double invDet = 1.0 / (planeX * dirY - dirX * planeY); //required for correct matrix multiplication
+
+                double transformX = invDet * (dirY * spriteX - dirX * spriteY);
+                double transformY = invDet * (-planeY * spriteX + planeX * spriteY);// this is actiually the depth inside the screen
+
+                int spriteScreenX = int((screenWidth/2 ) * (1 + transformX / transformY));
+
+                //calculate height of the sprite
+                int spriteHeight = abs(int(screenHeight/(transformY))); //use transformY instead of real dist
+                //calculate lowest and highest pixel to fill current stripe
+                int drawStartY = -spriteHeight / 2 + screenHeight / 2;
+                if(drawStartY < 0) drawStartY = 0;
+                int drawEndY = spriteHeight / 2 + screenHeight / 2;
+                if(drawEndY >= screenHeight) drawEndY = screenHeight - 1;
+
+                //calculate sprite width 
+                int spriteWidth = abs(int (screenHeight / (transformY)));
+                int drawStartX = -spriteWidth / 2 + spriteScreenX;
+                if(drawStartX < 0) drawStartX = 0;
+                int drawEndX = spriteWidth / 2 + spriteScreenX;
+                if(drawEndX >= screenWidth) drawEndX = screenWidth - 1;
+
+                //loop through every vertical strip
+                for(int stripe = drawStartX; stripe < drawEndX; stripe++)
+                {
+                    int texX = int(256 *(stripe - (-spriteWidth / 2 + spriteScreenX)) * texWidth / spriteWidth) / 256;
+                     //the conditions in the if are:
+                    //1) it's in front of camera plane so you don't see things behind you
+                    //2) it's on the screen (left)
+                    //3) it's on the screen (right)
+                    //4) ZBuffer, with perpendicular distance
+                    if(transformY > 0 && stripe > 0 && stripe < screenWidth && transformY < Zbuffer[stripe])
+                    for(int y = drawStartY; y < drawEndY; y++)
+                    {
+                        int d = (y) * 256 - screenHeight * 128 + spriteHeight * 128;//256 and 128 factors to avoid floats
+                        int texY = ((d * texHeight) / spriteHeight) / 256;
+                        Color spriteColor = texColors[sprite[spriteOrder[i]].texture][texWidth * texY + texX];
+                        if(spriteColor.r != 0 || spriteColor.g != 0 || spriteColor.b != 0)//skip black
+                        {
+                            pixels[y * screenWidth + stripe] = spriteColor;
+                        }
+                        
+                    }
+                    
+                }
+               
+            }
         
             
             //update textures each frame;    
@@ -339,10 +460,29 @@ int main()
         
     }
     // De-Initialization
-   for(int i = 0; i < 8; i++){
+   for(int i = 0; i < 11; i++){
     UnloadImageColors(texColors[i]);
    }
     CloseWindow();        // Close window and OpenGL context
 
     return 0;
+}
+
+//sort algorithm based on dist
+void sortSprites(int* order, double* dist, int amount)
+{
+    
+    std::vector<std::pair<double, int>> sprites(amount);
+    for(int i = 0; i < amount; i++)
+    {
+        sprites[i].first = dist[i];
+        sprites[i].second = order[i];
+    }
+    std::sort(sprites.begin(), sprites.end());
+    //restore in reverse order to go from farthest to nearest
+    for(int i = 0; i < amount; i++)
+    {
+        dist[i] = sprites[amount - i - 1].first;
+        order[i] = sprites[amount - i - 1].second;
+    }
 }
