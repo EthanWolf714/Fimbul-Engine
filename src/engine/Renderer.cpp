@@ -2,7 +2,7 @@
 
 void Renderer::Init()
 {
-    m_testTexture = LoadTexture("assets/pics/greystone.png");
+    
 }
 
 void Renderer::Update()
@@ -15,7 +15,7 @@ void Renderer::ShutDown()
     UnloadTexture(m_testTexture);
 }
 
-void Renderer::Draw(Camera& camera)
+void Renderer::Draw(Camera& camera, Texture m_testTexture)
 {
     BeginMode3D(camera);
         rlDisableBackfaceCulling();
