@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "rlgl.h"
 #include "Renderer.h"
+#include "Camera.h"
 #include "TextureManager.h"
 class Engine {
     public:
@@ -13,7 +14,7 @@ class Engine {
         void Update();
         void Render();
         Renderer m_renderer;
-        Camera3D m_camera;
+        GameCamera m_camera;
         TextureManager m_textureManager;
         bool m_running = false;
 
