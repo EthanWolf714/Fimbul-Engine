@@ -4,16 +4,20 @@ void Engine::Init(){
     InitWindow(800, 450, "Ulfr Engine");
     SetTargetFPS(60);
     m_running = true;
-    
+    rlImGuiSetup(true);
     m_renderer.Init();
     m_camera.Init();
     m_textureManager.Load("assets/pics/greystone.png");
     m_textureManager.Load("assets/pics/mossy.png");
     
     TraceLog(LOG_INFO, "Working directory: %s", GetWorkingDirectory());
+
+    
+
 }
 
 void Engine::Run(){
+    
     while(!WindowShouldClose() && m_running)
     {
        
@@ -24,6 +28,7 @@ void Engine::Run(){
 
 void Engine::ShutDown(){
     m_renderer.ShutDown();
+    rlImGuiShutdown();
     CloseWindow();
 }
 
@@ -38,7 +43,22 @@ void Engine::Render()
     
         m_renderer.BeginFrame(m_camera.GetCamera()); 
             m_renderer.DrawTestQuad( wallText);
+
+           
         m_renderer.EndFrame();
+            rlImGuiBegin();
+
+                ImGui::Begin("Debug");
+                    ImGui::Text("FPS: %d", GetFPS());
+                    ImGui::Text("Camera Pos: %.2f, %.2f, %.2f",
+                            m_camera.GetCamera().position.x, 
+                            m_camera.GetCamera().position.y, 
+                            m_camera.GetCamera().position.z );
+                ImGui::End();
+            rlImGuiEnd();
+
+
+        EndDrawing();
     
 
 

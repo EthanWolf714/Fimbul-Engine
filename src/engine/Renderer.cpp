@@ -73,6 +73,7 @@ void Renderer::BeginFrame(Camera3D& camera)
 {
     BeginDrawing();
         ClearBackground(BLACK);
+        
         BeginMode3D(camera);
             rlDisableBackfaceCulling();
 
@@ -82,7 +83,7 @@ void Renderer::EndFrame()
 {
             EndMode3D();
         EndTextureMode();
-    EndDrawing();
+   
 
 }
 

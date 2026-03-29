@@ -1,6 +1,8 @@
 #pragma once
 #include "raylib.h"
 #include "rlgl.h"
+#include "rlImGui.h"
+#include "imgui.h"
 #include "Renderer.h"
 #include "Camera.h"
 #include "TextureManager.h"
