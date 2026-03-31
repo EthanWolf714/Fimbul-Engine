@@ -17,28 +17,5 @@
 - [Earcut](https://github.com/nicowillis/earcut.c) — Polygon triangulation
 - [Chipmunk2D](https://github.com/slembcke/Chipmunk2D) — Physics
 
-### Architecture
-
-ulfr-engine/
-├── src/
-│   ├── main.cpp                    ← entry point only
-│   ├── engine/
-│   │   ├── Engine.h/.cpp           ← core engine class
-│   │   ├── Renderer.h/.cpp         ← all rlgl and BeginMode3D
-│   │   ├── Camera.h/.cpp           ← wraps Camera3D
-│   │   ├── TextureManager.h/.cpp   ← load/cache/unload textures
-│   ├── game/
-│   │   ├── Map.h/.cpp
-│   └── editor/
-│       ├── Editor.h/.cpp
-├── include/
-├── assets/
-│   └── textures/
-├── libs/
-│   ├── imgui/
-│   └── rlimgui/
-├── build/
-└── CMakeLists.txt
-
 ### Build instructions
 Coming soon!
