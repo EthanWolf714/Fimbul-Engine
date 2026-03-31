@@ -43,13 +43,6 @@ void Renderer::Draw(Camera& camera, Texture m_Texture)
         rlSetTexture(0);
 }
 
-void Renderer::DrawTestQuad(Texture m_testTexture)
-{
-    
-        //DrawFloor();
-        
-}
-
 void Renderer::DrawWall(const Wall& wall, Texture2D m_texture)
 {
     DrawGrid(1.0,1.0);

@@ -15,15 +15,6 @@ void Engine::Init(){
     
     TraceLog(LOG_INFO, "Working directory: %s", GetWorkingDirectory());
 
-    m_level[0] = {-5, -5,  5, -5, 0, 16};
-    m_level[1] = { 5, -5,  5,  5, 0, 16};
-    m_level[2] = { 5,  5, -5,  5, 0, 16};
-    m_level[3] = {-5,  5, -5, -5, 0, 16};
-
-    TraceLog(LOG_INFO, "Wall 0: %.1f %.1f %.1f %.1f", 
-        m_level[0].x1, m_level[0].z1, 
-        m_level[0].x2, m_level[0].z2);
-
 }
 
 void Engine::Run(){
