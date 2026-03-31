@@ -2,10 +2,11 @@
 #include "raylib.h"
 #include "raymath.h"
 #include "engine/Camera.h"
+#include "engine/Logger.h"
 
 
 
-
+//modeled after froopy090 fps-game in ralyib 
 
 
 class Player 
@@ -14,20 +15,21 @@ class Player
 
     public:
         Camera m_PlayerCam;
-        
+        int cameraMode;
         Player();
-        void Event();
         void Update();
         void Draw();
 
         Vector3 GetPosition();
+        Camera& GetCamera();
         Vector3 GetSize();
-
+        BoundingBox GetBoundingBox();
         Vector3 GetVelocity();
-
-        void SetXPos();
-        void SetYPos();
-        void SetZPos();
+        Vector3 GetPreviousPosition();
+        void SavePosition();
+        void SetXPos(float x);
+        void SetYPos(float y);
+        void SetZPos(float z);
         void setPlaneCollision(bool b);
         void Gravity(bool b);
         void setVelocity(Vector3 velocity);
@@ -48,6 +50,8 @@ class Player
         
 
 };
+
+
 
 
 

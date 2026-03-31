@@ -5,6 +5,7 @@
 #include "editor/LogPanel.h"
 #include "engine/Camera.h"
 #include "engine/Logger.h"
+
 class Editor
 {
     public:

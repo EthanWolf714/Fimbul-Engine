@@ -7,10 +7,16 @@
 #include "Camera.h"
 #include "TextureManager.h"
 #include "game/Map.h"
-#include "game/Player.h"
+
 #include "engine/Logger.h"
 #include "editor/Editor.h"
 
+
+enum class EngineMode
+{
+    Game,
+    Editor
+};
 class Engine {
     public:
         void Init();
@@ -26,7 +32,8 @@ class Engine {
         TextureManager m_textureManager;
         bool m_running = false;
         Map m_map;
-        Player m_player;
+        //Player m_player;
+        //EngineMode m_mode = EngineMode::Editor;
         
         
        
