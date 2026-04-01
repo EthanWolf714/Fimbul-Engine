@@ -22,7 +22,7 @@ Player::Player()
     m_PlayerCam.fovy = 90.0f;
     m_PlayerCam.projection = CAMERA_PERSPECTIVE;
     cameraMode = CAMERA_FIRST_PERSON;
-    DisableCursor(); // limit cursor movement to window
+    
 
     previousPosition = m_PlayerCam.position;
 

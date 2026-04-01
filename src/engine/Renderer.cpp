@@ -12,7 +12,7 @@ void Renderer::Update()
 
 void Renderer::ShutDown()
 {
-    UnloadTexture(m_testTexture);
+    UnloadTexture(m_Texture);
 }
 
 void Renderer::Draw(Camera& camera, Texture m_Texture)
@@ -45,8 +45,7 @@ void Renderer::Draw(Camera& camera, Texture m_Texture)
 
 void Renderer::DrawWall(const Wall& wall, Texture2D m_texture)
 {
-    DrawGrid(1.0,1.0);
-    rlSetTexture(m_texture.id);
+        rlSetTexture(m_texture.id);
         rlBegin(RL_QUADS);
             // front face of a wall quad
             // x is left/right, y is up/down, z is depth
@@ -104,8 +103,9 @@ void Renderer::BeginFrame(Camera3D& camera)
 
 void Renderer::EndFrame()
 {
-            EndMode3D();
-        EndTextureMode();
+             
+        EndMode3D();
+       
    
 
 }
