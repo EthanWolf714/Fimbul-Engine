@@ -3,8 +3,8 @@
 #include "imgui.h"
 #include "rlImGui.h"
 #include "editor/panels/LogPanel.h"
-#include "engine/renderer/Renderer.h"
-#include "engine/core/Logger.h"
+#include "Ulfr/renderer/Renderer.h"
+#include "Ulfr/core/Logger.h"
 
 class Editor
 {
