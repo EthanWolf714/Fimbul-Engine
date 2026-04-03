@@ -2,8 +2,8 @@
 #include "raylib.h"
 #include "rlgl.h"
 #include <string>
-#include "game/Map.h"
-#include "Logger.h"
+#include "game/map/Map.h"
+#include "engine/core/Logger.h"
 class Renderer
 {
     public:

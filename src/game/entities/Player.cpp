@@ -1,4 +1,4 @@
-#include "game/player.h"
+#include "game/entities/player.h"
 #include <iostream>
 
 Player::Player()

@@ -1,4 +1,4 @@
-#include "editor/Editor.h"
+#include "editor/core/Editor.h"
 
 void Editor::Init()
 {

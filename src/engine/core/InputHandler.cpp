@@ -1,4 +1,4 @@
-#include "engine/InputHandler.h"
+#include "engine/core/InputHandler.h"
 void InputHandler::Update()
 {
     m_forward = IsKeyDown(KEY_W);

@@ -1,4 +1,4 @@
-#include "game/Map.h"
+#include "game/map/Map.h"
 
 //takes in coordinate values and adds them to wall list
 void Map::AddWall(float x1, float z1, float x2, float z2)

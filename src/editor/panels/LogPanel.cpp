@@ -1,4 +1,4 @@
-#include "editor/LogPanel.h"
+#include "editor/panels/LogPanel.h"
 
 void LogPanel::Draw()
 {

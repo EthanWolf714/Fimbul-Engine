@@ -2,9 +2,9 @@
 #include "raylib.h"
 #include "imgui.h"
 #include "rlImGui.h"
-#include "editor/LogPanel.h"
-#include "engine/Camera.h"
-#include "engine/Logger.h"
+#include "editor/panels/LogPanel.h"
+#include "engine/renderer/Renderer.h"
+#include "engine/core/Logger.h"
 
 class Editor
 {
