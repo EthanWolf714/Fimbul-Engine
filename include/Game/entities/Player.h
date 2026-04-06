@@ -1,9 +1,9 @@
 #pragma once
 #include "raylib.h"
 #include "raymath.h"
-#include "Ulfr/renderer/Camera.h"
-#include "Ulfr/core/Logger.h"
-#include "Ulfr/core/InputHandler.h"
+#include "Engine/renderer/Camera.h"
+#include "Engine/core/Logger.h"
+#include "Engine/core/InputHandler.h"
 
 
 //modeled after froopy090 fps-game in ralyib 

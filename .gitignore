@@ -1,9 +1,10 @@
-build/
 *.exe
 *.o
 *.out
+.idea
 CMakeCache.txt
 imgui.ini
+cmake-build-debug-mingw/
 CMakeFiles/
 cmake_install.cmake
 Makefile

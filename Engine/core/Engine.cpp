@@ -1,4 +1,4 @@
-#include "Ulfr/core/Engine.h"
+#include "Engine/core/Engine.h"
 
 
 
@@ -6,7 +6,7 @@
 void Engine::Init(){
      printf("Engine Init called\n"); 
     Logger::DebugPrintF("Engine Initialized");
-    InitWindow(800, 450, "Ulfr Engine");
+    InitWindow(800, 450, "Engine Engine");
     SetTargetFPS(60);
     rlImGuiSetup(true);
 

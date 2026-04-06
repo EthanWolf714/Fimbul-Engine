@@ -2,9 +2,9 @@
 #include "raylib.h"
 #include "imgui.h"
 #include "rlImGui.h"
-#include "editor/panels/LogPanel.h"
-#include "Ulfr/renderer/Renderer.h"
-#include "Ulfr/core/Logger.h"
+#include "Editor/panels/LogPanel.h"
+#include "Engine/renderer/Renderer.h"
+#include "Engine/core/Logger.h"
 
 class Editor
 {

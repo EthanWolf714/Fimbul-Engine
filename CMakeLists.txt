@@ -72,9 +72,9 @@ target_link_libraries(rlimgui PUBLIC raylib imgui)
 # -------------------------------------------------------
 file(GLOB_RECURSE SOURCES
     "${CMAKE_SOURCE_DIR}/main.cpp"
-    "${CMAKE_SOURCE_DIR}/Ulfr/Core/*.cpp"
-    "${CMAKE_SOURCE_DIR}/Ulfr/Renderer/*.cpp"
-    "${CMAKE_SOURCE_DIR}/Ulfr/Resources/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Engine/Core/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Engine/Renderer/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Engine/Resources/*.cpp"
     "${CMAKE_SOURCE_DIR}/Game/Core/*.cpp"
     "${CMAKE_SOURCE_DIR}/Game/map/*.cpp"
     "${CMAKE_SOURCE_DIR}/Game/entities/*.cpp"
