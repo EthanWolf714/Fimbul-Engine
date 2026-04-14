@@ -9,7 +9,7 @@
  ### Stack
  I will be using straiger vulkan for this 
 - Vulkan
-- C
+- C++
 - other libraries maybe
 ### Build instructions
 Coming soon!
