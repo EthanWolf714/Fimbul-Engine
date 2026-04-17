@@ -3,7 +3,9 @@
 //Windows layer
 #if FPLATFORM_WINDOWS
 #include <stdlib.h>
-#include <core/logger.h>
+#include "core/logger.h"
+#include "core/input.h"
+
 #include <windows.h>
 #include <windowsx.h> //param input extractions
 
@@ -189,7 +191,7 @@ void platform_sleep(u64 ms){
     Sleep(ms);
 }
 
-LRESULT CALLBACK win32_process_message(HWND hwnd, u32 msg, WPARAM w_parm, LPARAM l_param){
+LRESULT CALLBACK win32_process_message(HWND hwnd, u32 msg, WPARAM w_param, LPARAM l_param){
     switch (msg)
     {
         case WM_ERASEBKGND:
@@ -215,31 +217,59 @@ LRESULT CALLBACK win32_process_message(HWND hwnd, u32 msg, WPARAM w_parm, LPARAM
         case WM_KEYUP:
         case WM_SYSKEYUP: {
             //key pressed/released
-            //b8 pressed = (msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN)
-            //TODO: input processing
+            b8 pressed = (msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN);
+            keys key = static_cast<keys>(w_param);
+
+            //pass to input for processing
+            input_process_key(key, pressed);
+
         }break;
         case WM_MOUSEMOVE: {
-            // i32 x_position = GET_X_LPARAM(l_param);
-            // i32 y_position = GET_Y_LPARAM(l_param);
+            //mouse move
+            i32 x_position = GET_X_LPARAM(l_param);
+            i32 y_position = GET_Y_LPARAM(l_param);
+            //input processing
+            input_process_mouse_move(x_position,y_position);
+
         }break; 
         case WM_MOUSEWHEEL: {
-            // i32 z_delta = GET_WHEEL_DELTA_WPARAM(w_parm);
-            // if(z_delta != 0){
-            //     //flatteen the input to an os indepented {-1,1}
-            //     z_delta = (z_delta < 0) ? -1 : 1;
-            // }
+            i32 z_delta = GET_WHEEL_DELTA_WPARAM(w_param);
+            if(z_delta != 0){
+                //flatteen the input to an os indepented {-1,1}
+                 z_delta = (z_delta < 0) ? -1 : 1;
+                 input_process_mouse_wheel(z_delta);
+            }
         }break;
         case WM_MBUTTONDOWN:
         case WM_RBUTTONDOWN:
         case WM_LBUTTONUP:
         case WM_MBUTTONUP:
         case WM_RBUTTONUP:{
-            //b8 pressed = msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN;
-            //TODO: INPUT PROCESSING
+            b8 pressed = msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN;
+            buttons mouse_button = BUTTON_MAX_BUTTONS;
+            switch(msg) {
+                case WM_LBUTTONDOWN:
+                case WM_LBUTTONUP:
+                    mouse_button = BUTTON_LEFT;
+                    break;
+                case WM_MBUTTONDOWN:
+                case WM_MBUTTONUP:
+                    mouse_button = BUTTON_MIDDLE;
+                    break;
+                case WM_RBUTTONDOWN:
+                case WM_RBUTTONUP:
+                    mouse_button = BUTTON_RIGHT;
+                    break;
+            }
+
+            //pass to input system
+            if(mouse_button != BUTTON_MAX_BUTTONS){
+                input_process_button(mouse_button, pressed);
+            }
         }break;
 
     }
 
-    return DefWindowProc(hwnd, msg, w_parm, l_param);
+    return DefWindowProc(hwnd, msg, w_param, l_param);
 }    
 #endif// FPLATFORM WINDOWS

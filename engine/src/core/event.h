@@ -32,7 +32,7 @@ struct EventContext {
 };
 
 //returns true if handled
-using EventCallback = std::function<bool(u16 code, void* sender, EventContext data)>;
+using EventCallback = std::function<bool(u16 code, void* sender,void* listener, EventContext data)>;
 
 //one registerd listener
 struct RegisteredEvent {

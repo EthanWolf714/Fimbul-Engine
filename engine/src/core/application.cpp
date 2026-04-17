@@ -4,6 +4,9 @@
 static b8 initialized = FALSE;
 static application_state app_state;
 
+b8 application_on_event(u16 code, void* sender, void* listener_inst, EventContext context);
+b8 application_on_keys(u16 code, void* sender, void* listener_inst, EventContext context);
+
 b8 application::application_create(game* game_inst){
     if(initialized){
         FERROR("application_create called more than once");
@@ -32,6 +35,10 @@ b8 application::application_create(game* game_inst){
         FERROR("Event system failed initialization. Application cannot continue!");
         return FALSE;
     }
+
+    event_syst.register_event(EVENT_CODE_APPLICATION_QUIT, 0, application_on_event);
+    event_syst.register_event(EVENT_CODE_KEY_PRESSED,0, application_on_keys);
+    event_syst.register_event(EVENT_CODE_KEY_RELEASED, 0, application_on_keys);
 
     if(!platform_startup(
         &app_state.platform, 
@@ -88,10 +95,50 @@ b8 application::application_run(){
     }
 
     app_state.is_running = FALSE;
+     event_syst.unregister_event(EVENT_CODE_APPLICATION_QUIT, 0);
+    event_syst.unregister_event(EVENT_CODE_KEY_PRESSED,0);
+    event_syst.unregister_event(EVENT_CODE_KEY_RELEASED, 0);
     event_syst.shutdown();
     input_shutdown();
     platform_shutdown(&app_state.platform);
 
     return TRUE;
+}
+
+
+b8 application_on_event(u16 code, void* sender, void* listener_inst, EventContext context){
+    switch(code){
+        case EVENT_CODE_APPLICATION_QUIT: {
+            FINFO("EVENT_CODE_APPLICATION_QUIT recieved, shutting down. \n");
+            app_state.is_running = FALSE;
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+b8 application_on_keys(u16 code, void* sender, void* listener_inst, EventContext context){
+    if(code == EVENT_CODE_KEY_PRESSED){
+        u16 key_code = context.data.u16[0];
+        if(key_code == KEY_ESCAPE){
+            EventContext data = {};
+            event_syst.fire_event(EVENT_CODE_APPLICATION_QUIT, 0, data);
+
+            return TRUE;
+        }else if(key_code == KEY_A){
+            FDEBUG("Explicit - A key pressed!");
+        }else{
+            FDEBUG("'%c' key pressed in window.", key_code);
+        }
+    }else if(code == EVENT_CODE_KEY_RELEASED){
+         u16 key_code = context.data.u16[0];
+        if(key_code == KEY_B){
+            FDEBUG("Explicit - B key relesase!");
+        }else{
+            FDEBUG("'%c' key released in window.", key_code);
+        }
+    }
+    return FALSE;
 }
 

@@ -44,7 +44,7 @@ int main(void)
         return 2;
     }
 
-
+    memory.shutdown_memeory();
 
     
     return 0;

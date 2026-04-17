@@ -64,7 +64,7 @@ b8 event::fire_event(u16 code, void* sender, EventContext context){
 
     auto listeners = it->second;
     for(auto& e: listeners){
-        if(e.callback(code, sender, context)){
+        if(e.callback(code, sender,e.listener, context)){
             return TRUE; //handled
         }
     }
