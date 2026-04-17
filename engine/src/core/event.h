@@ -63,7 +63,7 @@ class event {
 };
 
 
-enum class system_event_code {
+typedef enum system_event_code {
     // Shuts the application down on the next frame.
     EVENT_CODE_APPLICATION_QUIT = 0x01,
 
@@ -112,5 +112,7 @@ enum class system_event_code {
     EVENT_CODE_RESIZED = 0x08,
 
     MAX_EVENT_CODE = 0xFF
-};
+}system_event_code;
+
+extern FAPI event event_syst;
 

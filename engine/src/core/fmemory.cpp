@@ -59,7 +59,7 @@ char* fmemory::get_memory_usage_str(){
 
     i32 gib = 1024 * 1024 * 1024;
     i32 mib = 1024 * 1024;
-    i32 kib = 1024 * 1024;
+    i32 kib = 1024;
     //create buffer
     char buffer[8000] = "Sytem memory use: \n";
     u64 offset = strlen(buffer);

@@ -1,6 +1,6 @@
 #include "core/event.h"
 
-
+event event_syst;
 
 
 

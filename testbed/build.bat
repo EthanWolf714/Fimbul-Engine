@@ -14,8 +14,8 @@ SET assembly=testbed
 SET compilerFlags=-g 
 REM -Wall -Werror
 SET includeFlags=-Isrc -I../engine/src/
-SET linkerFlags=-L../bin/ -lengine.lib -lmsvcrtd -lvcruntimed -lucrtbased
-SET defines=-D_DEBUG -DFIMPORT
+SET linkerFlags=-L../bin/ -lengine.lib 
+SET defines=-D_DEBUG -DFIMPORT -D_ITERATOR_DEBUG_LEVEL=0
 
 ECHO "Building %assembly%%..."
-clang %cppFilenames% %compilerFlags% -o ../bin/%assembly%.exe %defines% %includeFlags% %linkerFlags%
+clang++ %cppFilenames% %compilerFlags% -o ../bin/%assembly%.exe %defines% %includeFlags% %linkerFlags%

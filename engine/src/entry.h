@@ -1,7 +1,7 @@
 #pragma once
-#include "global.h"
 #include "core/application.h"
 #include "core/logger.h"
+#include "core/fmemory.h"
 
 #include "game_types.h"
 

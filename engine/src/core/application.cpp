@@ -14,6 +14,7 @@ b8 application::application_create(game* game_inst){
 
     //intialize subsystems
     initialize_logging();
+    input_initialize();
 
 
      //log test
@@ -26,6 +27,11 @@ b8 application::application_create(game* game_inst){
 
     app_state.is_running = TRUE;
     app_state.is_suspended = FALSE;
+
+    if(!event_syst.initialize()){
+        FERROR("Event system failed initialization. Application cannot continue!");
+        return FALSE;
+    }
 
     if(!platform_startup(
         &app_state.platform, 
@@ -64,10 +70,26 @@ b8 application::application_run(){
                 break;
             }
 
-        }     
+        }   
+        //call games render routine
+        if(!app_state.game_inst->render(app_state.game_inst, (f32)0)){
+            FFATAL("Game render failed, shutting down.");
+            app_state.is_running = FALSE;
+            break;
+        }
+
+        //NOTE: input update/state copying should 
+        //always be handled after any input 
+        //should be recordere; I.E. before this line
+        //as a saftey, input is the last thing to be updated before
+        //this frame ends
+
+        input_update(0);
     }
 
     app_state.is_running = FALSE;
+    event_syst.shutdown();
+    input_shutdown();
     platform_shutdown(&app_state.platform);
 
     return TRUE;

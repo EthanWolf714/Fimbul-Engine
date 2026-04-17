@@ -4,6 +4,8 @@
 #include "logger.h"
 #include "platform/platform.h"
 #include "core/fmemory.h"
+#include "core/event.h"
+#include "core/input.h"
 
 struct game;
 
