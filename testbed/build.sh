@@ -20,4 +20,4 @@ defines="-D_DEBUG -DFIMPORT"
 
 echo "Building $assembly..."
 echo clang $cppFilenames $compilerFlags -o ../bin/$assembly $defines $includeFlags $linkerFlags
-clang $cppFilenames $compilerFlags -o ../bin/$assembly $defines $includeFlags $linkerFlags
+clang++ $cppFilenames $compilerFlags -o ../bin/$assembly $defines $includeFlags $linkerFlags
