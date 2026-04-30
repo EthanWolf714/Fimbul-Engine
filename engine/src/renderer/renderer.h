@@ -1,7 +1,6 @@
 #pragma once
 #include "defines.h"
-
-
+#include <vulkan/vulkan.h>
 class renderer {
     public:
         b8 renderer_initialize();
@@ -12,3 +11,4 @@ class renderer {
         VkInstance instance;
 
 };
+
