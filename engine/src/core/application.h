@@ -4,6 +4,7 @@
 #include "logger.h"
 #include "platform/platform.h"
 #include "core/fmemory.h"
+#include "clock.h"
 #include "core/event.h"
 #include "core/input.h"
 
@@ -31,6 +32,7 @@ struct application_state{
         b8 is_running;
         b8 is_suspended;
         platform_state platform;
+        clock clock;
         i16 width;
         i16 height;
         f64 last_time;
